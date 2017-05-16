@@ -7,17 +7,17 @@
 
 var logger = require('../log/logger')
 
-module.exports=function *(next){
+module.exports= async (ctx,next)=>{
     var start = new Date;
-
-    yield next;
+    
+    await next();
     // 再次进入 logger 中间件，记录2次通过此中间件「穿越」的时间
     var ms = new Date - start;
-
-    if(this.response.type==="application/json"){
-        logger.debug('[%s]%s %s [%s]- cost %s ms \r\n response data: %s', start,this.method, this.url,JSON.stringify(this.request.body), ms,JSON.stringify(this.response.body));
-
+    
+    if(ctx.response.type==="application/json"){
+        logger.debug('[%s]%s %s [%s]- cost %s ms \r\n response[%s] data: %s', start,ctx.method, ctx.url,JSON.stringify(ctx.request.body), ms,ctx.response.status,JSON.stringify(ctx.response.body));
+        
     }else{
-        logger.debug('[%s]%s %s [%s]- cost %s ms', start,this.method, this.url,JSON.stringify(this.request.body), ms);
+        logger.debug('[%s]%s %s [%s]- cost %s ms \r\n response[%s]', start,ctx.method, ctx.url,JSON.stringify(ctx.request.body), ms,ctx.response.status);
     }
 }

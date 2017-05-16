@@ -4,7 +4,7 @@ var map = new Map();
 
 map.set(
     //登录页面
-    ["GET","/login","ALLOW_ANONYMOUS"],
+    ["GET","/login","ALLOW_ANONYwaitTimeoutMOUS"],
     async function(ctx,next) {
 
         if(ctx.hasLogin()){

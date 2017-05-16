@@ -21,10 +21,10 @@ module.exports={
      * @param Creator：创建人
      * @returns {*}
      */
-    *addSysParam(context,{Category,Key,Value,Creator}){
+    async addSysParam(context,{Category,Key,Value,Creator}){
 
         //参数简单检查
-        let validateResult = yield validate(Category, "Category").notNull().notEmptyStr()
+        let validateResult = await validate(Category, "Category").notNull().notEmptyStr()
             .and(Key, "Key").notNull().notEmptyStr()
             .and(Value, "Value").notNull().notEmptyStr()
             .and(Creator, "Creator").notNull().notEmptyStr()
@@ -33,12 +33,12 @@ module.exports={
 
         //如果验证通过
         if (validateResult.pass) {
-            let created = yield models.SystemParam.create(
+            let created = await models.SystemParam.create(
                 {Category,Key,Value,Creator}
             );
 
             //重新查询对象信息
-            yield created.reload();
+            await created.reload();
 
             if (created) {
                 return resp.success({data: created});
@@ -60,7 +60,7 @@ module.exports={
      * @param Key：可选：参数名
      * @returns {*}
      */
-    *getSysParam(context,{Category,Key}){
+    async getSysParam(context,{Category,Key}){
         let where={};
 
         if(Category!==undefined){
@@ -70,7 +70,7 @@ module.exports={
             where.Key=Key;
         }
 
-        let result = yield models.SystemParam.findAll({"where":where});
+        let result = await models.SystemParam.findAll({"where":where});
 
         return resp.success({data: result});
     }

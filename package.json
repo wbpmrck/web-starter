@@ -33,6 +33,14 @@
     "mysql": "^2.11.1",
     "request": "^2.81.0",
     "request-promise-native": "^1.0.4",
-    "sequelize": "^3.27.0",
+    "sequelize": "^3.27.0"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^2.2.4",
+    "supertest": "^0.15.0"
+  },
+  "engines": {
+    "node": ">=6.8.x"
   }
 }

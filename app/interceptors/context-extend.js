@@ -4,15 +4,14 @@
  * 拦截器:用于在http 的 context 上添加一些helper方法，在action中就可以直接this.xxx使用了
  */
 
-var logger = require('../log/logger')
 
-module.exports=function *(next){
-
+module.exports=async (ctx,next)=>{
+    
     /**
      * 判断是否登录
      * @returns {boolean}
      */
-    this.hasLogin=function () {
+    ctx.hasLogin=function () {
         var self = this;
         if(self.session && self.session.user){
             return true;
@@ -24,7 +23,7 @@ module.exports=function *(next){
      * 获取 session user
      * @returns {*}
      */
-    this.getSessionUser=function () {
+    ctx.getSessionUser=function () {
         var self = this;
         if(self.session && self.session.user){
             return self.session.user;
@@ -37,7 +36,7 @@ module.exports=function *(next){
      * @param user
      * @returns {boolean}
      */
-    this.setSessionUser=function (user) {
+    ctx.setSessionUser=function (user) {
         var self = this;
         if(self.session){
             self.session.user = user;
@@ -46,6 +45,6 @@ module.exports=function *(next){
             return false;
         }
     };
-
-    yield next;
+    
+    await next();
 }

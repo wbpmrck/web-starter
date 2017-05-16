@@ -1,5 +1,5 @@
 
-const logger = require('../log/logger');
+const logger = require('./app/log/logger');
 const path = require('path');
 // const spawn = require('child_process').spawn;
 
@@ -17,26 +17,21 @@ require("./app/helper/validate-extend"); //这里不能删，通过require实现
 // var orm = require('koa-orm')(config.db);
 var orm = require('./app/dao/orm');
 
-var app = module.exports = koa();
-
-var logger = require('./app/log/logger')
-
-
-
+var app = module.exports = new koa();
 /* ---------------------------------
     错误处理
  ---------------------------------*/
 process.on('uncaughtException', (err) => {
-    console.error(`Caught exception: ${err}`);
+    console.error(`Caught exception: ${err.stack||err}`);
 });
 
 process.on('SIGHUP', () => {
-    console.log('pitaya Received SIGHUP.');
+    console.log('server Received SIGHUP.');
 });
 
 
 app.on('error', function(err){
-    logger.error('server error %s', err);
+    console.error('server error %s', err.stack||err);
 });
 
 

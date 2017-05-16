@@ -44,13 +44,8 @@ var config={
     }
 };
 //如果是prod环境,则取消sql的日志
-if(process.env.NODE_DEBUG.indexOf('debug')<0){
+if(process.env.NODE_DEBUG && process.env.NODE_DEBUG.indexOf('debug')<0){
     console.log('关闭mysql日志')
     config.db.logging = false;
-}
-//如果是local环境，则数据库自己改127.0.0.1
-if(process.env.NODE_DEBUG.indexOf('local')>-1){
-    console.log('设置mysql地址为本地')
-    config.db.host = '127.0.0.1';
 }
 module.exports = config;
