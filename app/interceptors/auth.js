@@ -23,7 +23,7 @@ module.exports=async (ctx,next)=>{
         logger.debug("检查登录状态");
         if(!session.user){
             //如果是html请求
-            if(ctx.request.headers["accept"].indexOf('text/html')>-1){
+            if(ctx.request.headers["accept"] && ctx.request.headers["accept"].indexOf('text/html')>-1){
                 //如果是页面，则重定向
                 ctx.response.redirect('/login');
             }else{

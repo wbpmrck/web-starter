@@ -13,10 +13,8 @@ var config={
         db: 'pitaya',
         username: 'root',
         password: 'kaicui',
-        // password: 'root',
         dialect: 'mysql',
         host: '127.0.0.1',
-        // host: '172.31.4.21',
         port: 3306,
         pool: {
             maxConnections: 10,

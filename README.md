@@ -90,15 +90,36 @@ $ ./run.debug.sh
 ## run mysql
 
 - install mysql in your machine
+- create db instance in your mysql service.
+
+> take care of the db name and user account.must consist in your configs in `./config/default.js`
+```js
+db :{
+        modelPath: require('path').join(__dirname, '../app/dao/models/generated'),
+        db: 'pitaya',
+        username: 'root',
+        password: 'kaicui',
+        dialect: 'mysql',
+        host: '127.0.0.1',
+        port: 3306,
+        pool: {
+            maxConnections: 10,
+            minConnections: 0,
+            maxIdleTime: 30000
+        }
+    }
+```
+
 - execute the .sql files in [docs dir](./docs/sql)
 
-## run test command
+## run test command and see result
 we use [mocha](https://mochajs.org) to test. the test command is simple:
 
 ```bash
 $ npm test
 ```
 
+and you can see the shell output of the test script.
 # todo
 
 see [todo list](./todo.md)
