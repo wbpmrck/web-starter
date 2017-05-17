@@ -13,7 +13,7 @@ map.set(
         var self= this;
         try{
 
-            let db =this.orm().sequelize,
+            let db =ctx.orm().sequelize,
                 models = db.models;
 
             let accountName=ctx.params.accountName,
@@ -69,7 +69,7 @@ map.set(
                 resp.success({data:ctx.getSessionUser()},ctx);
             }else{
 
-                let db =this.orm().sequelize,
+                let db =ctx.orm().sequelize,
                     models = db.models;
 
                 let accountName=ctx.params.accountName,

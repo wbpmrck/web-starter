@@ -69,7 +69,7 @@ module.exports={
         if(Key!==undefined){
             where.Key=Key;
         }
-
+    
         let result = await models.SystemParam.findAll({"where":where});
 
         return resp.success({data: result});

@@ -39,6 +39,35 @@ INFO 14634: =====路由注册完毕======
 ```
 # file structure
 
+## ./app
+the main dir of the web
+- controllers
+    - the controller of the web
+- dao
+    - the `data access objects` of the web
+- helper
+    - some utils
+- interceptors
+    - interceptor deal with each request,some before the controller,some after it.
+- log
+    - the log helper
+- routes
+    - the routes automation logic.
+
+    > you don't need to update this file
+
+- service
+    - services call `dao` to complete business ops.
+- views
+    - `view` is `server template`,put them here.
+- static
+    - static files here can be visite from http.
+
+## ./config
+here stays the configurations files.
+
+## ./framework
+the common utils/libs used by the web site.
 
 # docs
 the project have some `rules` that make code simple,see below articles for more details:
@@ -51,6 +80,24 @@ the project have some `rules` that make code simple,see below articles for more 
 
 
 # test
+
+## start server
+because it's a web site,so you should start it first:
+
+```bash
+$ ./run.debug.sh
+```
+## run mysql
+
+- install mysql in your machine
+- execute the .sql files in [docs dir](./docs/sql)
+
+## run test command
+we use [mocha](https://mochajs.org) to test. the test command is simple:
+
+```bash
+$ npm test
+```
 
 # todo
 

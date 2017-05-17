@@ -28,7 +28,7 @@ module.exports=async (ctx,next)=>{
                 ctx.response.redirect('/login');
             }else{
                 // 如果是ajax
-                resp.failed({code:resp.codes.NOT_LOGIN},this);
+                resp.failed({code:resp.codes.NOT_LOGIN},ctx);
             }
         }else{
             await next();

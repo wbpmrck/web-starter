@@ -11,7 +11,7 @@ var map = new Map();
 
 map.set(
     //添加系统参数
-    ["POST","/sys/addSysParam","ALLOW_ANONYMOUS"],
+    ["POST","/sys/addSysParam"],
     async function (ctx,next) {
 
         var self = this;
@@ -23,10 +23,10 @@ map.set(
             let Creator =ctx.getSessionUser().AccountName;
 
             //调用service获取返回数据
-            let result = await sysService.addSysParam(self, {Category,Key,Value,Creator});
+            let result = await sysService.addSysParam(ctx, {Category,Key,Value,Creator});
             ctx.body = result;
         } catch (e) {
-            resp.failed({desc: e.toString()}, self);
+            resp.failed({desc: e.toString()}, ctx);
         }
         finally {
             //执行流程交给下一个middle-ware
@@ -44,7 +44,7 @@ map.set(
         try{
             let {Category,Key}=ctx.query;
             //调用service获取返回数据
-            let result= await sysService.getSysParam(self,{Category,Key});
+            let result= await sysService.getSysParam(ctx,{Category,Key});
             ctx.body = result;
 
         }catch (e){
