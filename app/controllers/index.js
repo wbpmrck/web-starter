@@ -4,7 +4,7 @@ var map = new Map();
 
 map.set(
     //登录页面
-    ["GET","/login","ALLOW_ANONYwaitTimeoutMOUS"],
+    ["GET","/login","ALLOW_ANONYMOUS"],
     async function(ctx,next) {
 
         if(ctx.hasLogin()){
@@ -13,7 +13,7 @@ map.set(
         }else{
             // this.session.user = {AccountName:"kaicui"};
             await ctx.render('login.html', {
-                userInfo: JSON.stringify(this.getSessionUser())
+                userInfo: JSON.stringify(ctx.getSessionUser())
             });
         }
         await next();
@@ -24,7 +24,7 @@ map.set(
     ["GET","/","ALLOW_ANONYMOUS"],
     async function (ctx,next) {
         await ctx.render('index.html', {
-            userInfo: JSON.stringify(this.getSessionUser())
+            userInfo: JSON.stringify(ctx.getSessionUser())
         });
         await next();
     }

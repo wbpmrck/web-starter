@@ -31,6 +31,7 @@
     "koa-static": "^3.0.0",
     "koa-views": "^6.0.2",
     "mysql": "^2.11.1",
+    "ect": "^0.5.9",
     "request": "^2.81.0",
     "sequelize": "^3.27.0"
   },
