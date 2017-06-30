@@ -36,6 +36,12 @@
     "sequelize": "^3.27.0"
   },
   "devDependencies": {
+
+    "eslint": "^4.0.0",
+    "eslint-config-airbnb-base": "^11.2.0",
+    "eslint-import-resolver-webpack": "^0.8.1",
+    "eslint-plugin-html": "^3.0.0",
+    "eslint-plugin-import": "^2.3.0",
     "chai": "^3.5.0",
     "mocha": "^2.2.4",
     "request-promise-native": "^1.0.4",

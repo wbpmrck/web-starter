@@ -11,7 +11,7 @@ const co = require("co");
 const validate = require("../../framework/onelib/OneLib.Validation").targetWrapper;
 
 module.exports={
-
+    
     /**
      * 添加系统参数信息
      * @param context
@@ -22,7 +22,7 @@ module.exports={
      * @returns {*}
      */
     async addSysParam(context,{Category,Key,Value,Creator}){
-
+        
         //参数简单检查
         let validateResult = await validate(Category, "Category").notNull().notEmptyStr()
             .and(Key, "Key").notNull().notEmptyStr()
@@ -30,16 +30,16 @@ module.exports={
             .and(Creator, "Creator").notNull().notEmptyStr()
             .and([Category,Key], "Category,Key").notExistInTable("SystemParam",["Category","Key"])
             .run();
-
+        
         //如果验证通过
         if (validateResult.pass) {
             let created = await models.SystemParam.create(
                 {Category,Key,Value,Creator}
             );
-
+            
             //重新查询对象信息
             await created.reload();
-
+            
             if (created) {
                 return resp.success({data: created});
             } else {
@@ -51,7 +51,7 @@ module.exports={
                 desc: `${validateResult.desc}${validateResult.funcDesc}`
             })
         }
-
+        
     },
     /**
      * 获取系统参数信息
@@ -62,16 +62,16 @@ module.exports={
      */
     async getSysParam(context,{Category,Key}){
         let where={};
-
+        
         if(Category!==undefined){
             where.Category=Category;
         }
         if(Key!==undefined){
             where.Key=Key;
         }
-    
+        
         let result = await models.SystemParam.findAll({"where":where});
-
+        
         return resp.success({data: result});
     }
 }
