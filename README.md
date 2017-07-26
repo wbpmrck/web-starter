@@ -123,3 +123,8 @@ and you can see the shell output of the test script.
 # todo
 
 see [todo list](./todo.md)
+
+# about front-end
+
+- if your project is complicated,we suggest use single project to manage FE codes.
+- you can check [web-starter-front-end](https://github.com/wbpmrck/web-starter-front-end),its a front-end skeleton built for fast development
