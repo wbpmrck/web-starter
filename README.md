@@ -75,7 +75,6 @@ the project have some `rules` that make code simple,see below articles for more 
 - [How Router works](./docs/router.md)
 - [How Interceptor works](./docs/interceptor.md)
 - [CRUD with ORM](./docs/orm.md)
-- [logs](./docs/logs.md)
 - [user and roles](./docs/user.md)
 
 
