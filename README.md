@@ -73,6 +73,7 @@ the common utils/libs used by the web site.
 the project have some `rules` that make code simple,see below articles for more details:
 
 - [How Router works](./docs/router.md)
+- [template api](./docs/template.md)
 - [How Interceptor works](./docs/interceptor.md)
 - [CRUD with ORM](./docs/orm.md)
 - [user and roles](./docs/user.md)
