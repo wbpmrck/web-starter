@@ -6,248 +6,253 @@
 
 - we use [koa-views](https://github.com/queckezz/koa-views) to handle view rendering work.
 - [koa-views](https://github.com/queckezz/koa-views) use [consolidate](https://github.com/tj/consolidate.js) inside.
-- at last, from [config file](../config/default.js) you can see we use [ect](https://github.com/baryshev/ect) as  the default template engine.
+- at last, from [config file](../config/default.js) you can see we use [ejs](https://github.com/mde/ejs) as  the default template engine.
 
 # api
 
-> content below is from  [ect](https://github.com/baryshev/ect)
+> content below is from  [ejs](https://github.com/mde/ejs)
 
 
 ## Features
 
-  * Excellent performance
-  * Templates caching
-  * Automatic reloading of changed templates
-  * CoffeeScript code in templates
-  * Multi-line expressions support
-  * Tag customization support
-  * Node.JS and client-side support
-  * Powerful but simple syntax
-  * Inheritance, partials, blocks
-  * Compatible with `express`
-  * Compatible with `RequireJS`
-  * Backward compatible with `eco`
-  * [Syntax highlighting for Sublime Text 2](https://github.com/TurtlePie/Sublime-ECT) by [TurtlePie](https://github.com/TurtlePie)
+  * Control flow with `<% %>`
+  * Escaped output with `<%= %>` (escape function configurable)
+  * Unescaped raw output with `<%- %>`
+  * Newline-trim mode ('newline slurping') with `-%>` ending tag
+  * Whitespace-trim mode (slurp all whitespace) for control flow with `<%_ _%>`
+  * Custom delimiters (e.g., use `<? ?>` instead of `<% %>`)
+  * Includes
+  * Client-side support
+  * Static caching of intermediate JavaScript
+  * Static caching of templates
+  * Complies with the [Express](http://expressjs.com) view system
+
+## Example
+
+```html
+<% if (user) { %>
+  <h2><%= user.name %></h2>
+<% } %>
+```
+
+Try EJS online at: https://ionicabizau.github.io/ejs-playground/.
 
 ## Usage
 
-```js
-var ECT = require('ect');
+```javascript
+var template = ejs.compile(str, options);
+template(data);
+// => Rendered HTML string
 
-var renderer = ECT({ root : __dirname + '/views', ext : '.ect' });
-var html = renderer.render('page', { title: 'Hello, World!' });
-```
+ejs.render(str, data, options);
+// => Rendered HTML string
 
-or
-
-```js
-var ECT = require('ect');
-
-var renderer = ECT({ root : __dirname + '/views', ext : '.ect' });
-
-renderer.render('page', { title: 'Hello, World!' }, function (error, html) {
-	console.log(error);
-	console.log(html);
+ejs.renderFile(filename, data, options, function(err, str){
+    // str => Rendered HTML string
 });
 ```
 
-You may use JavaScript object as root.
-
-```js
-var ECT = require('ect');
-
-var renderer = ECT({ root : {
-				layout: '<html><head><title><%- @title %></title></head><body><% content %></body></html>',
-				page: '<% extend "layout" %><p>Page content</p>'
-				}
-			});
-
-var html = renderer.render('page', { title: 'Hello, World!' });
-```
-
-### With express
-
-app.js
-```js
-var express = require('express');
-var app = express();
-var ECT = require('ect');
-var ectRenderer = ECT({ watch: true, root: __dirname + '/views', ext : '.ect' });
-
-app.set('view engine', 'ect');
-app.engine('ect', ectRenderer.render);
-
-app.get('/', function (req, res){
-	res.render('index');
-});
-
-app.listen(3000);
-console.log('Listening on port 3000');
-```
-
-views/index.ect
-```html
-<% extend 'layout' %>
-<% include 'extra' %>
-<div>Hello, World!</div>
-```
-
-views/extra.ect
-```html
-<div>Include me!</div>
-```
-
-views/layout.ect
-```html
-<html>
-	<body>
-		<% content %>
-	</body>
-</html>
-```
-
-## Syntax
-
-### Unescaped output
-
-```
-<%- someVar %>
-```
-
-### Escaped output
-
-```
-<%= someVar %>
-```
-
-### CoffeeScript code
-
-```
-<% for article in @articles : %>
-	<% include 'article', article %>
-<% end %>
-```
-
-or
-
-```
-<% if @user?.authenticated : %>
-	<% include 'partials/user' %>
-<% else : %>
-	<% include 'partials/auth' %>
-<% end %>
-```
-
-### Inheritance
-
-```
-<% extend 'layout' %>
-```
-
-Use
-
-
-```
-<% content %>
-```
-
-in parent template to define the insertion point.
-
-### Partials
-
-```
-<% include 'partial' %>
-```
-
-You can redefine data context of partial
-
-```
-<% include 'partial', { customVar: 'Hello, World!' } %>
-```
-
-### Blocks
-
-```
-<% block 'blockName' : %>
-	<p>This is block content</p>
-<% end %>
-```
-
-Use
-
-
-```
-<% content 'blockName' %>
-```
-
-in parent template to define the insertion point.
-
-Blocks supports more than one level of inheritance and may be redefined.
+It is also possible to use `ejs.render(dataAndOptions);` where you pass
+everything in a single object. In that case, you'll end up with local variables
+for all the passed options. However, be aware that your code could break if we
+add an option with the same name as one of your data object's properties.
+Therefore, we do not recommend using this shortcut.
 
 ## Options
 
-### Renderer
+  - `cache`           Compiled functions are cached, requires `filename`
+  - `filename`        The name of the file being rendered. Not required if you
+    are using `renderFile()`. Used by `cache` to key caches, and for includes.
+  - `root`            Set project root for includes with an absolute path (/file.ejs).
+  - `context`         Function execution context
+  - `compileDebug`    When `false` no debug instrumentation is compiled
+  - `client`          When `true`, compiles a function that can be rendered
+    in the browser without needing to load the EJS Runtime
+    ([ejs.min.js](https://github.com/mde/ejs/releases/latest)).
+  - `delimiter`       Character to use with angle brackets for open/close
+  - `debug`           Output generated function body
+  - `strict`          When set to `true`, generated function is in strict mode
+  - `_with`           Whether or not to use `with() {}` constructs. If `false` then the locals will be stored in the `locals` object. Set to `false` in strict mode.
+  - `localsName`      Name to use for the object storing local variables when not using `with` Defaults to `locals`
+  - `rmWhitespace`    Remove all safe-to-remove whitespace, including leading
+    and trailing whitespace. It also enables a safer version of `-%>` line
+    slurping for all scriptlet tags (it does not strip new lines of tags in
+    the middle of a line).
+  - `escape`          The escaping function used with `<%=` construct. It is
+    used in rendering and is `.toString()`ed in the generation of client functions. (By default escapes XML).
 
-  - `root` — Templates root folder or JavaScript object containing templates
-  - `ext` — Extension of templates, defaulting to `''` (not used for JavaScript objects as root)
-  - `cache` — Compiled functions are cached, defaulting to `true`
-  - `watch` — Automatic reloading of changed templates, defaulting to `false` (useful for debugging with enabled cache, not supported for client-side)
-  - `open` — Open tag, defaulting to `<%`
-  - `close` — Closing tag, defaulting to `%>`
+This project uses [JSDoc](http://usejsdoc.org/). For the full public API
+documentation, clone the repository and run `npm run doc`. This will run JSDoc
+with the proper options and output the documentation to `out/`. If you want
+the both the public & private API docs, run `npm run devdoc` instead.
 
-### Compiler middleware
+## Tags
 
-  - `root` — Base url, defaulting to `/` (should be equal to `root` option on the client side)
-  - `gzip` — Compressing templates with gzip, defaulting to `false`
+  - `<%`              'Scriptlet' tag, for control-flow, no output
+  - `<%_`             'Whitespace Slurping' Scriptlet tag, strips all whitespace before it
+  - `<%=`             Outputs the value into the template (escaped)
+  - `<%-`             Outputs the unescaped value into the template
+  - `<%#`             Comment tag, no execution, no output
+  - `<%%`             Outputs a literal '<%'
+  - `%%>`             Outputs a literal '%>'
+  - `%>`              Plain ending tag
+  - `-%>`             Trim-mode ('newline slurp') tag, trims following newline
+  - `_%>`             'Whitespace Slurping' ending tag, removes all whitespace after it
+
+For the full syntax documentation, please see [docs/syntax.md](https://github.com/mde/ejs/blob/master/docs/syntax.md).
+
+## Includes
+
+Includes either have to be an absolute path, or, if not, are assumed as
+relative to the template with the `include` call. For example if you are
+including `./views/user/show.ejs` from `./views/users.ejs` you would
+use `<%- include('user/show') %>`.
+
+You must specify the `filename` option for the template with the `include`
+call unless you are using `renderFile()`.
+
+You'll likely want to use the raw output tag (`<%-`) with your include to avoid
+double-escaping the HTML output.
+
+```html
+<ul>
+  <% users.forEach(function(user){ %>
+    <%- include('user/show', {user: user}) %>
+  <% }); %>
+</ul>
+```
+
+Includes are inserted at runtime, so you can use variables for the path in the
+`include` call (for example `<%- include(somePath) %>`). Variables in your
+top-level data object are available to all your includes, but local variables
+need to be passed down.
+
+NOTE: Include preprocessor directives (`<% include user/show %>`) are
+still supported.
+
+## Custom delimiters
+
+Custom delimiters can be applied on a per-template basis, or globally:
+
+```javascript
+var ejs = require('ejs'),
+    users = ['geddy', 'neil', 'alex'];
+
+// Just one template
+ejs.render('<?= users.join(" | "); ?>', {users: users}, {delimiter: '?'});
+// => 'geddy | neil | alex'
+
+// Or globally
+ejs.delimiter = '$';
+ejs.render('<$= users.join(" | "); $>', {users: users});
+// => 'geddy | neil | alex'
+```
+
+## Caching
+
+EJS ships with a basic in-process cache for caching the intermediate JavaScript
+functions used to render templates. It's easy to plug in LRU caching using
+Node's `lru-cache` library:
+
+```javascript
+var ejs = require('ejs')
+  , LRU = require('lru-cache');
+ejs.cache = LRU(100); // LRU cache with 100-item limit
+```
+
+If you want to clear the EJS cache, call `ejs.clearCache`. If you're using the
+LRU cache and need a different limit, simple reset `ejs.cache` to a new instance
+of the LRU.
+
+## Custom FileLoader
+
+The default file loader is `fs.readFileSync`, if you want to customize it, you can set ejs.fileLoader.
+
+```javascript
+var ejs = require('ejs');
+var myFileLoad = function (filePath) {
+  return 'myFileLoad: ' + fs.readFileSync(filePath);
+};
+
+ejs.fileLoader = myFileLoad;
+```
+
+With this feature, you can preprocess the template before reading it.
+
+## Layouts
+
+EJS does not specifically support blocks, but layouts can be implemented by
+including headers and footers, like so:
+
+
+```html
+<%- include('header') -%>
+<h1>
+  Title
+</h1>
+<p>
+  My page
+</p>
+<%- include('footer') -%>
+```
 
 ## Client-side support
 
-Download and include [coffee-script.js](https://github.com/jashkenas/coffee-script/blob/master/extras/coffee-script.js) and [ect.min.js](https://github.com/baryshev/ect/tree/master/ect.min.js).
+Go to the [Latest Release](https://github.com/mde/ejs/releases/latest), download
+`./ejs.js` or `./ejs.min.js`. Alternately, you can compile it yourself by cloning
+the repository and running `jake build` (or `$(npm bin)/jake build` if jake is
+not installed globally).
+
+Include one of these files on your page, and `ejs` should be available globally.
+
+### Example
 
 ```html
-<script src="/path/coffee-script.js"></script>
-<script src="/path/ect.min.js"></script>
+<div id="output"></div>
+<script src="ejs.min.js"></script>
+<script>
+  var people = ['geddy', 'neil', 'alex'],
+      html = ejs.render('<%= people.join(", "); %>', {people: people});
+  // With jQuery:
+  $('#output').html(html);
+  // Vanilla JS:
+  document.getElementById('output').innerHTML = html;
+</script>
 ```
 
-Use it.
+### Caveats
 
-```js
-var renderer = ECT({ root : '/views' });
-var data = { title : 'Hello, World!' };
-var html = renderer.render('template.ect', data);
-```
+Most of EJS will work as expected; however, there are a few things to note:
 
-### With server side compiler middleware
+1. Obviously, since you do not have access to the filesystem, `ejs.renderFile()` won't work.
+2. For the same reason, `include`s do not work unless you use an `IncludeCallback`. Here is an example:
+  ```javascript
+  var str = "Hello <%= include('file', {person: 'John'}); %>",
+      fn = ejs.compile(str, {client: true});
 
-Download and include [ect.min.js](https://github.com/baryshev/ect/tree/master/ect.min.js). You don't need to include CoffeeScript compiler, because templates are served already compiled by server side compiler middleware.
+  fn(data, null, function(path, d){ // IncludeCallback
+    // path -> 'file'
+    // d -> {person: 'John'}
+    // Put your code here
+    // Return the contents of file as a string
+  }); // returns rendered string
+  ```
 
-```html
-<script src="/path/ect.min.js"></script>
-```
+## Related projects
 
-Setup server side compiler middleware.
+There are a number of implementations of EJS:
 
-```js
-var connect = require('connect');
-var ECT = require('ect');
+ * TJ's implementation, the v1 of this library: https://github.com/tj/ejs
+ * Jupiter Consulting's EJS: http://www.embeddedjs.com/
+ * EJS Embedded JavaScript Framework on Google Code: https://code.google.com/p/embeddedjavascript/
+ * Sam Stephenson's Ruby implementation: https://rubygems.org/gems/ejs
+ * Erubis, an ERB implementation which also runs JavaScript: http://www.kuwata-lab.com/erubis/users-guide.04.html#lang-javascript
 
-var renderer = ECT({ root : __dirname + '/views', ext : '.ect' });
+## License
 
-var app = connect()
-	.use(renderer.compiler({ root: '/views', gzip: true }))
-	.use(function(err, req, res, next) {
-		res.end(err.message);
-	});
+Licensed under the Apache License, Version 2.0
+(<http://www.apache.org/licenses/LICENSE-2.0>)
 
-app.listen(3000);
-```
-
-Use it.
-
-```js
-var renderer = ECT({ root : '/views', ext : '.ect' });
-var data = { title : 'Hello, World!' };
-var html = renderer.render('template', data);
-```
-
-Note: root folder must be on the same domain to avoid cross-domain restrictions.
+- - -
+EJS Embedded JavaScript templates copyright 2112
+mde@fleegix.org.
