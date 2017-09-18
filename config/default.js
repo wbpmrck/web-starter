@@ -26,8 +26,7 @@ var config={
     template: {
         path: 'app/views',
         options: {
-            // map: { ect: 'ect' }
-            map: { html: 'ect' }
+            map: { html: 'ejs' }
         }
     },
     static:{
