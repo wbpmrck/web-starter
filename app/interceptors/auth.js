@@ -19,6 +19,8 @@ module.exports=async (ctx,next)=>{
     if( (matched && matched.path && matched.path.length>0 && matched.path[0].name=='ALLOW_ANONYMOUS' )|| req.path.indexOf(".")>-1){
         logger.debug("指定路由不做检查");
         await next();
+    }else if(!matched || matched.path.length<1){
+        resp.status =404;
     }else{
         logger.debug("检查登录状态");
         if(!session.user){
