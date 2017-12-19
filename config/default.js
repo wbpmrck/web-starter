@@ -26,7 +26,7 @@ var config={
     template: {
         path: 'app/views',
         options: {
-            map: { html: 'ejs' }
+            map: { html: 'handlebars' }
         }
     },
     static:{
